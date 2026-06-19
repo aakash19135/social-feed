@@ -12,9 +12,10 @@ export default function PostCard({
   const [likes, setLikes] = useState(0);
 
   const [saved, setSaved] = useState(false);
-
+ const [isFollowing, setIsFollowing] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+ 
 
   const addComment = () => {
     if (comment.trim() === "") return;
@@ -32,20 +33,39 @@ export default function PostCard({
   }`}
 >
       {/* User */}
-      <div className="flex items-center gap-3">
-        <img
-          src={avatar}
-          alt="avatar"
-          className="w-10 h-10 rounded-full"
-        />
+      <div className="flex items-center justify-between">
+  <div className="flex items-center gap-3">
+    <img
+      src={avatar}
+      alt="avatar"
+      className="w-10 h-10 rounded-full"
+    />
 
-        <div>
-          <h3 className="font-bold">{user}</h3>
-          <p className="text-gray-400 text-sm">
-            Frontend Developer
-          </p>
-        </div>
-      </div>
+    <div>
+      <h3 className="font-bold">{user}</h3>
+
+      <p className="text-gray-400 text-sm">
+        Frontend Developer
+      </p>
+    </div>
+  </div>
+  {user !== "Aakash" && (
+    <button
+      onClick={() =>
+        setIsFollowing(!isFollowing)
+      }
+      className={`px-3 py-1 rounded-lg text-white text-sm ${
+        isFollowing
+          ? "bg-red-500"
+          : "bg-blue-500"
+      }`}
+    >
+      {isFollowing
+        ? "Unfollow"
+        : "Follow"}
+    </button>
+  )}
+</div>
 
       {/* Text */}
       <p className="mt-3">

@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 export default function Sidebar({ darkMode }) {
+
   return (
     <div
       className={`rounded-xl p-4 shadow-lg ${
@@ -61,4 +64,3 @@ export default function Sidebar({ darkMode }) {
     </div>
   );
 }
-export default Sidebar;
