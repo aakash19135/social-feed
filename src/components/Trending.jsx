@@ -1,59 +1,40 @@
-export default function Trending({ darkMode }) {
+export default function Trending({ darkMode, posts = []}) {
   const hashtags = [
-    { tag: "#react", posts: "12.5K" },
-    { tag: "#javascript", posts: "9.8K" },
-    { tag: "#mongodb", posts: "7.6K" },
-    { tag: "#nodejs", posts: "6.4K" },
-    { tag: "#frontend", posts: "5.2K" },
+    { tag: "#react", count: 12 },
+    { tag: "#frontend", count: 9 },
+    { tag: "#javascript", count: 8 },
+    { tag: "#nodejs", count: 6 },
+    { tag: "#mongodb", count: 5 },
+    { tag: "#tailwind", count: 4 },
   ];
 
   return (
     <div
-      className={`rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 ${
+      className={`rounded-2xl p-5 shadow-xl ${
         darkMode
           ? "bg-slate-800 text-white"
           : "bg-white text-black"
       }`}
     >
-      <h2 className="text-2xl font-bold mb-1">
+      <h2 className="text-xl font-bold mb-5">
         🔥 Trending
       </h2>
-
-      <p
-        className={`text-sm mb-5 ${
-          darkMode ? "text-gray-400" : "text-gray-500"
-        }`}
-      >
-        Trending in Technology
-      </p>
 
       {hashtags.map((item, index) => (
         <div
           key={index}
-          className={`mb-3 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:scale-105 ${
+          className={`p-3 mb-3 rounded-xl transition hover:scale-105 cursor-pointer ${
             darkMode
               ? "hover:bg-slate-700"
               : "hover:bg-gray-100"
           }`}
         >
-          <p
-            className={`text-xs ${
-              darkMode ? "text-gray-400" : "text-gray-500"
-            }`}
-          >
-            #{index + 1} Trending
-          </p>
-
-          <p className="font-bold text-blue-500 text-lg">
+          <p className="text-blue-500 font-semibold">
             {item.tag}
           </p>
 
-          <p
-            className={`text-sm ${
-              darkMode ? "text-gray-300" : "text-gray-500"
-            }`}
-          >
-            {item.posts} Posts
+          <p className="text-sm text-gray-500">
+            {item.count} posts
           </p>
         </div>
       ))}

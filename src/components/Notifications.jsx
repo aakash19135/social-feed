@@ -1,73 +1,41 @@
-export default function Notifications({ darkMode }) {
-  const notifications = [
-    {
-      id: 1,
-      icon: "❤️",
-      text: "Rahul liked your post.",
-      time: "2 min ago",
-    },
-    {
-      id: 2,
-      icon: "💬",
-      text: "Priya commented on your post.",
-      time: "15 min ago",
-    },
-    {
-      id: 3,
-      icon: "👤",
-      text: "Rohit started following you.",
-      time: "1 hour ago",
-    },
-    {
-      id: 4,
-      icon: "📌",
-      text: "Ananya bookmarked your post.",
-      time: "3 hours ago",
-    },
-    {
-      id: 5,
-      icon: "🔥",
-      text: "#react is trending now.",
-      time: "Today",
-    },
-  ];
-
+export default function Notifications({
+  darkMode,
+  notifications,
+}) {
   return (
     <div
-      className={`rounded-2xl p-5 shadow-lg ${
+      className={`rounded-2xl shadow-xl p-6 ${
         darkMode
           ? "bg-slate-800 text-white"
           : "bg-white text-black"
       }`}
     >
-      <h2 className="text-2xl font-bold mb-5">
+      <h2 className="text-2xl font-bold mb-6">
         🔔 Notifications
       </h2>
 
-      <div className="space-y-3">
-        {notifications.map((item) => (
+      {notifications.length === 0 ? (
+        <p className="text-gray-500">
+          No notifications yet.
+        </p>
+      ) : (
+        notifications.map((item, index) => (
           <div
-            key={item.id}
-            className={`flex justify-between items-center p-3 rounded-xl transition hover:scale-[1.02] ${
+            key={index}
+            className={`mb-4 p-4 rounded-xl ${
               darkMode
-                ? "bg-slate-700 hover:bg-slate-600"
-                : "bg-gray-100 hover:bg-gray-200"
+                ? "bg-slate-700"
+                : "bg-gray-100"
             }`}
           >
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{item.icon}</span>
+            <p>{item.message}</p>
 
-              <div>
-                <p>{item.text}</p>
-
-                <p className="text-xs text-gray-400">
-                  {item.time}
-                </p>
-              </div>
-            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {item.time}
+            </p>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 }

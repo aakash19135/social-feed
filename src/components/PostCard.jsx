@@ -8,20 +8,41 @@ export default function PostCard({
   time,
   onDelete,
   darkMode,
+  onBookmark,
+  addNotification,
+  onRepost,
+  totalLikes,
+  setTotalLikes,
+  totalcomments,
+  setTotalComments,
+  totalBookmarks,
+  setTotalBookmarks,
 }) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [saved, setSaved] = useState(false);
+  const[shared, setShared] = useState(false);
+  const[quoted , setQuoted] = useState(false);
+  const [quoteText, setQuoteText] = useState("");
   const [isFollowing, setIsFollowing] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
-  const addComment = () => {
-    if (comment.trim() === "") return;
+ const addComment = () => {
+  if (comment.trim() === "") return;
 
-    setComments([...comments, comment]);
-    setComment("");
-  };
+  setComments([...comments, comment]);
+  setTotalComments((prev)=> prev + 1);
+
+  if (addNotification) {
+    addNotification({
+      message: `💬 You commented on ${user}'s post`,
+      time: "Just now",
+    });
+  }
+
+  setComment("");
+};
 
   return (
     <div
@@ -56,9 +77,17 @@ export default function PostCard({
 
         {user !== "Aakash" && (
           <button
-            onClick={() =>
-              setIsFollowing(!isFollowing)
-            }
+            onClick={() => {
+  setIsFollowing(!isFollowing);
+
+  addNotification &&
+    addNotification({
+      message: !isFollowing
+        ? `➕ You followed ${user}`
+        : `➖ You unfollowed ${user}`,
+      time: "Just now",
+    });
+}}
             className={`px-4 py-1 rounded-lg text-white text-sm transition ${
               isFollowing
                 ? "bg-red-500 hover:bg-red-600"
@@ -101,13 +130,22 @@ export default function PostCard({
 
         <button
           onClick={() => {
-            setLiked(!liked);
+  setLiked(!liked);
 
-            if (!liked)
-              setLikes(likes + 1);
-            else
-              setLikes(likes - 1);
-          }}
+  if (!liked) {
+    setTotalLikes((prev)=> prev + 1);
+    setLikes(likes + 1);
+
+    addNotification &&
+      addNotification({
+        message: `❤️ You liked ${user}'s post`,
+        time: "Just now",
+      });
+  } else {
+    setTotalLikes((prev)=> prev - 1);
+    setLikes(likes - 1);
+  }
+}}
           className="hover:text-blue-500 transition"
         >
           {liked
@@ -122,11 +160,34 @@ export default function PostCard({
         </button>
 
         <button
-          onClick={() => setSaved(!saved)}
-          className="hover:text-blue-500 transition"
-        >
-          {saved ? "📌 Saved" : "📌 Save"}
-        </button>
+  onClick={() => {
+    setSaved(!saved);
+
+    if (!saved && onBookmark) {
+      onBookmark({
+        user,
+        text,
+        image,
+        avatar,
+        time,
+      });
+    }
+  }}
+>
+  {saved ? "📌 Saved" : "📌 Save"}
+</button>
+        <button
+  onClick={() => {
+    navigator.clipboard.writeText(text);
+    setShared(true);
+
+    setTimeout(() => {
+      setShared(false);
+    }, 2000);
+  }}
+>
+  {shared ? "✅ Shared" : "📤 Share"}
+</button>
 
         <button
           onClick={onDelete}
@@ -136,7 +197,48 @@ export default function PostCard({
         </button>
 
       </div>
+        {quoted && (
+  <div className="mt-4">
+    <textarea
+      value={quoteText}
+      onChange={(e) => setQuoteText(e.target.value)}
+      placeholder="Write your thoughts..."
+      className={`w-full p-3 rounded-lg border ${
+        darkMode
+          ? "bg-slate-700 border-slate-600 text-white"
+          : "bg-white border-gray-300"
+      }`}
+    />
 
+    <button
+      onClick={() => {
+        if (onRepost) {
+          onRepost({
+            user: "Aakash",
+            text: `${quoteText}\n\n🔁 ${text}`,
+            image,
+            avatar,
+            time: "Just now",
+            reposted: true,
+          });
+        }
+
+        setQuoted(false);
+        setQuoteText("");
+
+        if (addNotification) {
+          addNotification({
+            message: `💬 You quoted ${user}'s post`,
+            time: "Just now",
+          });
+        }
+      }}
+      className="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg"
+    >
+      Post Quote
+    </button>
+  </div>
+)}
       {/* Comment Box */}
       <div className="mt-5">
 
@@ -160,6 +262,36 @@ export default function PostCard({
         >
           Add Comment
         </button>
+        <button
+  onClick={() => {
+    if (onRepost) {
+      onRepost({
+        user: "Aakash",
+        text,
+        image,
+        avatar,
+        time: "Just now",
+        reposted: true,
+      });
+    }
+
+    if (addNotification) {
+      addNotification({
+        message: `🔁 You reposted ${user}'s post`,
+        time: "Just now",
+      });
+    }
+  }}
+  className="hover:text-green-500 transition"
+>
+  🔁 Repost
+</button>
+<button
+  onClick={() => setQuoted(!quoted)}
+  className="hover:text-purple-500 transition"
+>
+  💬 Quote
+</button>
 
         {comments.length > 0 && (
           <div className="mt-4 space-y-2">

@@ -1,53 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostCard from "./PostCard";
-
-export default function Feed({ darkMode }) {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      user: "Aakash",
-      text: "Hello Social Feed 🚀 #react #frontend",
-      image: null,
-      avatar: "https://i.pravatar.cc/150?img=1",
-      time: "2 hours ago",
-    },
-    {
-      id: 2,
-      user: "Rahul",
-      text: "Learning React today! #react #javascript",
-      image: null,
-      avatar: "https://i.pravatar.cc/150?img=2",
-      time: "3 hours ago",
-    },
-    {
-      id: 3,
-      user: "Priya",
-      text: "Building a social media app. #react #mongodb",
-      image: null,
-      avatar: "https://i.pravatar.cc/150?img=3",
-      time: "5 hours ago",
-    },
-    {
-      id: 4,
-      user: "Ananya",
-      text: "Just posted my first blog! #javascript",
-      image: null,
-      avatar: "https://i.pravatar.cc/150?img=4",
-      time: "1 day ago",
-    },
-    {
-      id: 5,
-      user: "Rohit",
-      text: "Exploring new features. #nodejs #mongodb",
-      image: null,
-      avatar: "https://i.pravatar.cc/150?img=5",
-      time: "2 days ago",
-    },
-  ]);
-
+export default function Feed({ 
+  darkMode,
+   posts,
+    setPosts,
+     onBookmark, 
+     addNotification,
+    totalLikes,
+  setTotalLikes,
+   totalComments,
+  setTotalComments,
+   totalBookmarks,
+   setTotalBookmarks, }) {
   const [newPost, setNewPost] = useState("");
   const [search, setSearch] = useState("");
   const [image, setImage] = useState(null);
+  const [visiblePosts, setVisiblePosts] = useState(3);
+  const [loading, setLoading] = useState(false);
 
   const handlePost = () => {
     if (newPost.trim() === "") return;
@@ -56,8 +25,10 @@ export default function Feed({ darkMode }) {
       id: Date.now(),
       user: "Aakash",
       text: newPost,
-      image: image,
-      avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
+      image,
+      avatar: `https://i.pravatar.cc/150?img=${Math.floor(
+        Math.random() * 70
+      )}`,
       time: "Just now",
     };
 
@@ -66,10 +37,32 @@ export default function Feed({ darkMode }) {
     setImage(null);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 150 &&
+        !loading &&
+        visiblePosts < posts.length
+      ) {
+        setLoading(true);
+
+        setTimeout(() => {
+          setVisiblePosts((prev) => prev + 3);
+          setLoading(false);
+        }, 800);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () =>
+      window.removeEventListener("scroll", handleScroll);
+  }, [loading, visiblePosts, posts]);
+
   return (
     <div className="p-4">
 
-      {/* Search */}
       <input
         type="text"
         placeholder="Search posts..."
@@ -82,7 +75,6 @@ export default function Feed({ darkMode }) {
         }`}
       />
 
-      {/* Create Post */}
       <textarea
         rows="3"
         value={newPost}
@@ -94,10 +86,7 @@ export default function Feed({ darkMode }) {
             : "bg-white border-gray-300 text-black"
         }`}
       />
-
-      {/* Upload + Button */}
       <div className="flex items-center justify-between mt-3 flex-wrap gap-3">
-
         <label
           className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition border ${
             darkMode
@@ -131,7 +120,6 @@ export default function Feed({ darkMode }) {
         </button>
       </div>
 
-      {/* Preview */}
       {image && (
         <img
           src={image}
@@ -140,12 +128,12 @@ export default function Feed({ darkMode }) {
         />
       )}
 
-      {/* Posts */}
       <div className="mt-6 space-y-5">
         {posts
           .filter((post) =>
             post.text.toLowerCase().includes(search.toLowerCase())
           )
+          .slice(0, visiblePosts)
           .map((post) => (
             <PostCard
               key={post.id}
@@ -156,12 +144,46 @@ export default function Feed({ darkMode }) {
               image={post.image}
               time={post.time}
               darkMode={darkMode}
+              onBookmark={() => onBookmark(post)}
+              totalLikes={totalLikes}
+               setTotalLikes={setTotalLikes}
+                totalComments={totalComments}
+                setTotalComments={setTotalComments}
+                totalBookmarks={totalBookmarks}
+               setTotalBookmarks={setTotalBookmarks}
+              addNotification={(notification) => addNotification(notification)}
+              onRepost={(newPost) => setPosts([newPost, ...posts])}
               onDelete={() =>
                 setPosts(posts.filter((p) => p.id !== post.id))
               }
             />
           ))}
       </div>
+
+      {loading && (
+        <div className="flex flex-col items-center py-6">
+          <div className="h-10 w-10 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+
+          <p
+            className={`mt-3 ${
+              darkMode ? "text-gray-300" : "text-gray-500"
+            }`}
+          >
+            Loading more posts...
+          </p>
+        </div>
+      )}
+
+      {!loading && visiblePosts < posts.length && (
+        <div className="text-center mt-6">
+          <button
+            onClick={() => setVisiblePosts((prev) => prev + 3)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }

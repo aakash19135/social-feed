@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Sidebar({ 
-  darkMode, setCurrentPage }) {
+  darkMode, currentPage,setCurrentPage }) {
   return (
     <div
       className={`rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 ${
@@ -76,17 +76,27 @@ export default function Sidebar({
       {/* Navigation */}
       <div className="mt-7 space-y-3">
 
-        <div 
-        onClick={() => setCurrentPage("home")}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white cursor-pointer shadow">
-          🏠 Home
-        </div>
+        <div
+  onClick={() => setCurrentPage("home")}
+  className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
+    currentPage === "home"
+      ? "bg-blue-600 text-white shadow"
+      : "hover:bg-blue-500 hover:text-white"
+  }`}
+>
+  🏠 Home
+</div>
 
-        <div 
-        onClick={() => setCurrentPage("profile")}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
-          👤 Profile
-        </div>
+        <div
+  onClick={() => setCurrentPage("profile")}
+  className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
+    currentPage === "profile"
+      ? "bg-blue-600 text-white shadow"
+      : "hover:bg-blue-500 hover:text-white"
+  }`}
+>
+  👤 Profile
+</div>
 
         <div 
         onClick={() => setCurrentPage("trending")}
@@ -94,7 +104,9 @@ export default function Sidebar({
           🔥 Trending
         </div>
 
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
+        <div 
+        onClick={() => setCurrentPage("notifications")}
+        className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
           🔔 Notifications
         </div>
 
@@ -103,6 +115,12 @@ export default function Sidebar({
         className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
           📌 Bookmarks
         </div>
+        <div
+  onClick={() => setCurrentPage("dashboard")}
+  className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition"
+>
+  📊 Dashboard
+</div>
       </div>
     </div>
   );
