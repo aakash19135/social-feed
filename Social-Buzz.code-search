@@ -1,0 +1,18 @@
+# Query: Social-feed
+# ContextLines: 1
+
+3 results - 2 files
+
+social-feed\package-lock.json:
+  1  {
+  2:   "name": "Social-Buzz",
+  3    "version": "0.0.0",
+
+  7      "": {
+  8:       "name": "Social-Buzz",
+  9        "version": "0.0.0",
+
+social-feed\package.json:
+  1  {
+  2:   "name": "Social-Buzz",
+  3    "private": true,
