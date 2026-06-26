@@ -16,6 +16,11 @@ function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const[notifications , setNotifications] = useState([]);
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
+  const [profile, setProfile] = useState({
+  name: "Aakash",
+  bio: "Frontend Developer | React Developer | Open Source Learner",
+  avatar: "https://i.pravatar.cc/200?img=12",
+});
   const [posts, setPosts] = useState([
   {
     id: 1,
@@ -126,6 +131,7 @@ function App() {
             darkMode={darkMode}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            profile={profile}
           />
         </div>
 
@@ -136,6 +142,7 @@ function App() {
   darkMode={darkMode}
   posts={posts}
   setPosts={setPosts}
+  profile={profile}
   onBookmark={(post)=> 
     setBookmarks((prev)=> [...prev,post])
   }
@@ -169,7 +176,9 @@ function App() {
           )}
 
           {currentPage === "profile" && (
-            <Profile darkMode={darkMode} />
+            <Profile darkMode={darkMode} 
+            profile={profile}
+            setProfile={setProfile}/>
           )}
           {currentPage === "dashboard" && (
   <Dashboard

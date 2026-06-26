@@ -4,6 +4,7 @@ export default function Feed({
   darkMode,
    posts,
     setPosts,
+    profile,
      onBookmark, 
      addNotification,
     totalLikes,
@@ -23,7 +24,7 @@ export default function Feed({
 
     const post = {
       id: Date.now(),
-      user: "Aakash",
+      user:profile.name,
       text: newPost,
       image,
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(

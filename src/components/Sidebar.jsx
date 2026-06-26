@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Sidebar({ 
-  darkMode, currentPage,setCurrentPage }) {
+  darkMode, currentPage,setCurrentPage, profile,}) {
   return (
     <div
       className={`rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 ${
@@ -33,7 +33,7 @@ export default function Sidebar({
         </div>
 
         <h2 className="text-2xl font-bold mt-3">
-          Aakash
+          {profile.name}
         </h2>
 
         <p

@@ -1,15 +1,10 @@
 import { useState } from "react";
 
-export default function Profile({ darkMode }) {
-  const [name, setName] = useState("Aakash");
-  const [bio, setBio] = useState(
-    "Frontend Developer | React Developer | Open Source Learner"
-  );
-
-  const [avatar, setAvatar] = useState(
-    "https://i.pravatar.cc/200?img=12"
-  );
-
+export default function Profile({
+  darkMode,
+  profile,
+  setProfile,
+}) {
   const [editing, setEditing] = useState(false);
 
   return (
@@ -23,7 +18,7 @@ export default function Profile({ darkMode }) {
       <div className="flex flex-col items-center">
 
         <img
-          src={avatar}
+          src={profile.avatar}
           alt="profile"
           className="w-36 h-36 rounded-full object-cover border-4 border-blue-500"
         />
@@ -32,8 +27,13 @@ export default function Profile({ darkMode }) {
           <input
             type="text"
             placeholder="Image URL"
-            value={avatar}
-            onChange={(e) => setAvatar(e.target.value)}
+            value={profile.avatar}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                avatar: e.target.value,
+              })
+            }
             className={`mt-4 w-full p-3 rounded-xl border ${
               darkMode
                 ? "bg-slate-700 border-slate-600"
@@ -45,8 +45,13 @@ export default function Profile({ darkMode }) {
         {editing ? (
           <>
             <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={profile.name}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  name: e.target.value,
+                })
+              }
               className={`mt-5 w-full p-3 rounded-xl border ${
                 darkMode
                   ? "bg-slate-700 border-slate-600"
@@ -56,8 +61,13 @@ export default function Profile({ darkMode }) {
 
             <textarea
               rows="4"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              value={profile.bio}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  bio: e.target.value,
+                })
+              }
               className={`mt-3 w-full p-3 rounded-xl border resize-none ${
                 darkMode
                   ? "bg-slate-700 border-slate-600"
@@ -68,11 +78,11 @@ export default function Profile({ darkMode }) {
         ) : (
           <>
             <h2 className="text-3xl font-bold mt-5">
-              {name}
+              {profile.name}
             </h2>
 
             <p className="mt-3 text-center text-gray-500">
-              {bio}
+              {profile.bio}
             </p>
           </>
         )}
