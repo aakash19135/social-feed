@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar({ 
-  darkMode, currentPage,setCurrentPage, profile,}) {
+  darkMode, profile, onLogout }) {
   return (
     <div
       className={`rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 ${
@@ -10,7 +10,6 @@ export default function Sidebar({
           : "bg-white text-black"
       }`}
     >
-      {/* Profile Card */}
       <div
         className={`text-center rounded-2xl p-5 border ${
           darkMode
@@ -19,12 +18,10 @@ export default function Sidebar({
         }`}
       >
         <img
-          src="https://i.pravatar.cc/150?img=12"
+          src={profile.avatar}
           alt="profile"
           className="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-lg hover:scale-105 transition"
         />
-
-        {/* Online Status */}
         <div className="flex justify-center items-center mt-2">
           <span className="w-3 h-3 rounded-full bg-green-500"></span>
           <span className="ml-2 text-sm text-green-500">
@@ -73,55 +70,93 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Navigation */}
+      
       <div className="mt-7 space-y-3">
 
-        <div
-  onClick={() => setCurrentPage("home")}
-  className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
-    currentPage === "home"
-      ? "bg-blue-600 text-white shadow"
-      : "hover:bg-blue-500 hover:text-white"
-  }`}
+    <NavLink
+  to="/"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
 >
   🏠 Home
-</div>
+</NavLink>
 
-        <div
-  onClick={() => setCurrentPage("profile")}
-  className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
-    currentPage === "profile"
-      ? "bg-blue-600 text-white shadow"
-      : "hover:bg-blue-500 hover:text-white"
-  }`}
+       <NavLink
+  to="/profile"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
 >
   👤 Profile
-</div>
+</NavLink>
 
-        <div 
-        onClick={() => setCurrentPage("trending")}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
-          🔥 Trending
-        </div>
+        <NavLink
+  to="/trending"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
+>
+  🔥 Trending
+</NavLink>
 
-        <div 
-        onClick={() => setCurrentPage("notifications")}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
+        <NavLink
+  to="/notifications"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
+>
           🔔 Notifications
-        </div>
+        </NavLink>
 
-        <div 
-        onClick={() => setCurrentPage("bookmarks")}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
-          📌 Bookmarks
-        </div>
-        <div
-  onClick={() => setCurrentPage("dashboard")}
-  className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white transition"
+       <NavLink
+  to="/bookmarks"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
+>
+  📌 Bookmarks
+</NavLink>
+    <NavLink
+  to="/dashboard"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+      isActive
+        ? "bg-blue-600 text-white shadow"
+        : "hover:bg-blue-500 hover:text-white"
+    }`
+  }
 >
   📊 Dashboard
+</NavLink>
+
+  <button
+    onClick={onLogout}
+    className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl transition"
+  >
+    Logout
+  </button>
 </div>
-      </div>
-    </div>
+</div>
   );
 }

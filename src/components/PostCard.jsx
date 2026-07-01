@@ -11,6 +11,8 @@ export default function PostCard({
   onBookmark,
   addNotification,
   onRepost,
+  onEdit,
+  edited,
   totalLikes,
   setTotalLikes,
   totalcomments,
@@ -20,11 +22,15 @@ export default function PostCard({
 }) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+const [editedText, setEditedText] = useState(text);
   const [saved, setSaved] = useState(false);
   const[shared, setShared] = useState(false);
   const[quoted , setQuoted] = useState(false);
   const [quoteText, setQuoteText] = useState("");
+  const [showEmoji , setShowEmoji] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const[showImage, setShowImage] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
@@ -43,6 +49,20 @@ export default function PostCard({
 
   setComment("");
 };
+const emojis = [
+  "😀",
+  "😂",
+  "😍",
+  "🥳",
+  "😎",
+  "🔥",
+  "❤️",
+  "👍",
+  "👏",
+  "💯",
+  "🎉",
+  "🚀",
+];
 
   return (
     <div
@@ -52,14 +72,13 @@ export default function PostCard({
           : "bg-white text-black"
       }`}
     >
-      {/* Header */}
       <div className="flex justify-between items-center">
 
         <div className="flex gap-3 items-center">
           <img
             src={avatar}
             alt="avatar"
-            className="w-12 h-12 rounded-full"
+            className="w-14 h-14 rounded-full object-cover"
           />
 
           <div>
@@ -100,32 +119,69 @@ export default function PostCard({
 
       </div>
 
-      {/* Text */}
-      <p className="mt-4 leading-7">
-        {text.split(" ").map((word, index) =>
-          word.startsWith("#") ? (
-            <span
-              key={index}
-              className="text-blue-500 font-semibold"
-            >
-              {word}{" "}
-            </span>
-          ) : (
-            word + " "
-          )
-        )}
-      </p>
+      {isEditing ? (
+  <textarea
+    value={editedText}
+    onChange={(e) => setEditedText(e.target.value)}
+    rows="4"
+    className={`mt-4 w-full rounded-lg border p-3 ${
+      darkMode
+        ? "bg-slate-700 border-slate-600 text-white"
+        : "bg-white border-gray-300"
+    }`}
+  />
+) : (
+  <p className="mt-4 leading-7">
+    {text.split(" ").map((word, index) =>
+      word.startsWith("#") ? (
+        <span
+          key={index}
+          className="text-blue-500 font-semibold"
+        >
+          {word}{" "}
+        </span>
+      ) : (
+        word + " "
+      )
+    )}
 
-      {/* Image */}
+    {edited && (
+      <span className="text-gray-400 text-sm ml-2">
+        (Edited)
+      </span>
+    )}
+  </p>
+)}
       {image && (
-        <img
-          src={image}
-          alt="post"
-          className="mt-4 rounded-xl w-full max-h-96 object-cover"
-        />
-      )}
+        <div className="mt-4" flex justify-center >
+  <img
+    src={image}
+    alt="post"
+    onClick={() => setShowImage(true)}
+    className="w-auto max-w-sm h-56 object-cover rounded-xl cursor-pointer hover:opacity-90 transition shadow-md"
+  />
+  </div>
+)}
+{showImage && (
+  <div
+    className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+    onClick={() => setShowImage(false)}
+  >
+    <button
+      className="absolute top-5 right-6 text-white text-4xl"
+      onClick={() => setShowImage(false)}
+    >
+      ✕
+    </button>
 
-      {/* Actions */}
+    <img
+      src={image}
+      alt="Full"
+      onClick={(e) => e.stopPropagation()}
+      className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
+    />
+  </div>
+)}
       <div className="flex gap-6 mt-5 text-sm font-medium">
 
         <button
@@ -188,6 +244,44 @@ export default function PostCard({
 >
   {shared ? "✅ Shared" : "📤 Share"}
 </button>
+{user === "Aakash" && !isEditing && (
+  <button
+    onClick={() => setIsEditing(true)}
+    className="hover:text-yellow-500 transition"
+  >
+    ✏ Edit
+  </button>
+)}
+
+{isEditing && (
+  <>
+    <button
+      onClick={() => {
+        onEdit(editedText);
+        setIsEditing(false);
+
+        addNotification &&
+          addNotification({
+            message: "✏️ You edited your post",
+            time: "Just now",
+          });
+      }}
+      className="text-green-500 hover:text-green-600"
+    >
+      💾 Save
+    </button>
+
+    <button
+      onClick={() => {
+        setEditedText(text);
+        setIsEditing(false);
+      }}
+      className="text-gray-500 hover:text-gray-700"
+    >
+      ❌ Cancel
+    </button>
+  </>
+)}
 
         <button
           onClick={onDelete}
@@ -255,6 +349,32 @@ export default function PostCard({
               : "bg-white border-gray-300"
           }`}
         />
+        <div className="mt-2 flex items-center gap-2 flex-wrap">
+  <button
+    onClick={() => setShowEmoji(!showEmoji)}
+    className="px-3 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500"
+  >
+    😊 Emoji
+  </button>
+
+  {showEmoji && (
+    <div
+      className={`flex flex-wrap gap-2 p-3 rounded-lg ${
+        darkMode ? "bg-slate-700" : "bg-gray-100"
+      }`}
+    >
+      {emojis.map((emoji) => (
+        <button
+          key={emoji}
+          onClick={() => setComment((prev) => prev + emoji)}
+          className="text-2xl hover:scale-125 transition"
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
         <button
           onClick={addComment}

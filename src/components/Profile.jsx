@@ -22,6 +22,26 @@ export default function Profile({
           alt="profile"
           className="w-36 h-36 rounded-full object-cover border-4 border-blue-500"
         />
+        <label className="mt-4 inline-block cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+  Change Avatar
+
+  <input
+    type="file"
+    hidden
+    accept="image/*"
+    onChange={(e) => {
+      const file = e.target.files[0];
+
+      if (file) {
+        setProfile((prev) => ({
+          ...prev,
+          avatar: URL.createObjectURL(file),
+        }));
+      }
+    }}
+    />
+      
+</label>
 
         {editing && (
           <input
